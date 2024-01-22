@@ -1,0 +1,40 @@
+.info {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 4.8rem;
+  margin-top: 8rem;
+
+  &--reversed {
+    flex-direction: row-reverse;
+    padding-left: 4.8rem;
+    padding-right: 0;
+
+    & .info__image {
+      border-radius: 329px 0 0 329px;
+    }
+  }
+
+  &__text {
+    width: 48%;
+  }
+
+  &__headline {
+    margin-top: 4rem;
+    margin-bottom: 3rem;
+  }
+
+  & .btn {
+    margin-top: 3rem;
+  }
+}
+
+.info__image {
+  width: 48%;
+  height: auto;
+  border-radius: 0px 329px 329px 0px;
+}
+
+.copy {
+  font-size: 1.6rem;
+  font-weight: 500;
+}
