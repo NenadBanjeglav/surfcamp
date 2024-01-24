@@ -1,6 +1,6 @@
-import HeroSection from "@/app/_components/HeroSection";
 import axios from "axios";
 import Link from "next/link";
+import qs from "qs";
 
 export const BASE_URL = process.env.STRAPI_URL || "http://127.0.0.1:1337";
 
@@ -53,6 +53,7 @@ function processBlogArticle(article) {
 export function formatDate(dateString) {
   const date = new Date(dateString);
   const options = {
+    weekday: "long",
     year: "numeric",
     month: "long",
     day: "2-digit",
@@ -62,4 +63,71 @@ export function formatDate(dateString) {
 
 export function extractImageUrl(imageData) {
   return BASE_URL + imageData.data?.attributes?.url;
+}
+
+export async function fetchIndividualEvent(eventId) {
+  const response = await axios.get(`${BASE_URL}/api/events/${eventId}`);
+  return processEventData(response.data.data);
+}
+
+function processEventData(event) {
+  return {
+    ...event.attributes,
+    id: event.id,
+    image: BASE_URL + event.attributes?.image?.data?.attributes?.url,
+  };
+}
+
+export function generateSignupPayload(formData, eventId) {
+  if (!eventId) {
+    return {
+      data: {
+        ...formData,
+        isGeneralInterest: true,
+      },
+    };
+  } else {
+    return {
+      data: {
+        ...formData,
+        event: {
+          connect: [eventId],
+        },
+      },
+    };
+  }
+}
+
+function createEventQuery(eventIdtoExclude) {
+  const queryObject = {
+    pagination: {
+      start: 0,
+      limit: 12,
+    },
+    sort: ["startingDate:asc"],
+    filters: {
+      startingDate: {
+        $gt: new Date(),
+      },
+    },
+    populate: {
+      image: {
+        populate: "*",
+      },
+    },
+  };
+
+  if (eventIdtoExclude) {
+    queryObject.filters.id = {
+      $ne: eventIdtoExclude,
+    };
+  }
+  return qs.stringify(queryObject, { encodeValuesOnly: true });
+}
+
+export async function fetchAllEvents(eventIdtoExclude = null) {
+  const query = createEventQuery(eventIdtoExclude);
+  const response = await axios.get(`${BASE_URL}/api/events?${query}`);
+
+  return response.data.data.map((el) => processEventData(el));
 }

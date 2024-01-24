@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import FeaturedArticle from "./FeaturedArticle";
+import FeaturedEvent from "./FeaturedEvent";
 
-function FeaturedItems({ headline, items }) {
+function FeaturedItems({ headline, items, itemType = "article" }) {
   const [itemNumber, setItemNumber] = useState(3);
 
   const onShowMore = () => {
@@ -20,7 +21,11 @@ function FeaturedItems({ headline, items }) {
       </h3>
       <div className="featured-items__container">
         {items.slice(0, itemNumber).map((el) => {
-          return <FeaturedArticle key={el.slug} article={el} />;
+          if (itemType === "article") {
+            return <FeaturedArticle key={el.slug} article={el} />;
+          } else {
+            return <FeaturedEvent key={el.id} event={el} />;
+          }
         })}
       </div>
       {itemNumber < items.length && (

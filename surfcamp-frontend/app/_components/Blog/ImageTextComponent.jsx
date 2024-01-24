@@ -3,7 +3,6 @@ import { extractImageUrl } from "@/utils/strapi.utils";
 import ReactMarkdown from "react-markdown";
 
 function ImageTextComponent({ component }) {
-  console.log(extractImageUrl(component.image));
   const { paragraph, imageCaption, image, isLandscape, imageShowsRight } =
     component;
   return (

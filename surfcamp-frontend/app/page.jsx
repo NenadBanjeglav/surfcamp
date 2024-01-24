@@ -7,6 +7,7 @@ import {
   fetchDataFromStrapi,
 } from "@/utils/strapi.utils";
 import InfoBlock from "./_components/InfoBlock";
+import BlogPreview from "./_components/BlogPreview/BlogPreview";
 
 export default async function Home() {
   const data = await fetchDataFromStrapi("infoblocks-landing?populate=deep");
@@ -37,6 +38,7 @@ export default async function Home() {
       {infoBlockData.map((el) => (
         <InfoBlock key={el.id} data={el} />
       ))}
+      <BlogPreview />
     </main>
   );
 }
